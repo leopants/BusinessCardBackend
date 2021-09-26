@@ -82,8 +82,7 @@ const card = sequelize.define('card', {
   }
 }, {
   timestamps: false
-}
-);
+});
 
 const holding = sequelize.define('holding', {
   userid: {
@@ -151,9 +150,9 @@ app.post('/createcard', async (req, res) => {
   imagefront = req.body.imagefront;
   imageback = req.body.imageback;
   qrcode = req.body.qrcode;
-
+  console.log("Variables saved")
   try {
-    const card = await card.create({
+    const currCard = await card.create({
       creatorid: creatorid,
       companyname: companyname,
       phonenumber: phonenumber,
