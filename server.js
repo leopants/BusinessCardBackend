@@ -165,6 +165,10 @@ app.post('/createcard', async (req, res) => {
       imageback: imageback,
       qrcode: qrcode
     })
+    console.log(card.cardid)
+    card.qrcode = "https://business-card-backend-qkym9.ondigitalocean.app/getcardid?cardid=" + card.cardid;
+// the name is still "Jane" in the database
+    await card.save();
     console.log("User added to the table")
     res.send("User added")
   }
