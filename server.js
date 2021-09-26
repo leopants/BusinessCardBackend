@@ -37,15 +37,16 @@ const users = sequelize.define('users', {
 
 const card = sequelize.define('card', { 
   creatorid: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+      type: Sequelize.INTEGER,
+      references: 'users', // <<< Note, its table's name, not object name
+      referencesKey: 'id'
   },
   companyname: {
       type: DataTypes.STRING,
       allowNull: false
   },
   phonenumber: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false
   },
   address: {
@@ -140,6 +141,7 @@ app.post('/createuser', async (req, res) => {
 })
 
 app.post('/createcard', async (req, res) => {
+  sequelize.authenticate();
   creatorid = req.body.creatorid;
   companyname = req.body.companyname;
   phonenumber = req.body.phonenumber;
@@ -152,6 +154,7 @@ app.post('/createcard', async (req, res) => {
   qrcode = req.body.qrcode;
   console.log("Variables saved")
   try {
+    console.log("inside try")
     const currCard = await card.create({
       creatorid: creatorid,
       companyname: companyname,
@@ -164,16 +167,29 @@ app.post('/createcard', async (req, res) => {
       imageback: imageback,
       qrcode: qrcode
     })
-    console.log(card.id)
-    currCard.qrcode = "https://business-card-backend-qkym9.ondigitalocean.app/getcardid?cardid=" + card.id;
+    console.log(currCard.id)
+    currCard.qrcode = "https://business-card-backend-qkym9.ondigitalocean.app/getcardid?cardid=" + currCard.id;
 // the name is still "Jane" in the database
     await currCard.save();
     console.log("User added to the table")
-    res.send("User added")
+    res.send("Card added")
   }
   //username or email already exists
   catch {
     res.send('no')
+  }
+})
+
+app.get('/getcreatedcards', async (req, res) => {
+  let userid = req.query.userid;
+
+  let user = await card.findAll( {where: {creatorid : userid}})
+  if (user) {
+    //response = user.firstname, user.lastname, user.username, user.email, user.id]
+    res.json(user)
+  }
+  else {
+    res.status(400, "No user found")
   }
 })
 
@@ -193,10 +209,10 @@ app.get('/getcards', async (req, res) => {
 app.get('/getcardid', async (req, res) => {
   let cardid = req.query.cardid
 
-  let card = await card.findAll( {where: {cardid: cardid}})
-  if (card) {
+  let curCard = await card.findAll( {where: {cardid: cardid}})
+  if (currCard) {
     //response = user.firstname, user.lastname, user.username, user.email, user.id]
-    res.send(card.cardid)
+    res.send(currCard.cardid)
   }
   else {
     res.status(400, "No card found")
