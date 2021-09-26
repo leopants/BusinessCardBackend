@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const port = 8080
 var bodyParser = require("body-parser")
 var cors = require('cors')
 const  {Sequelize, DataTypes} = require('sequelize')
@@ -106,9 +106,6 @@ const holding = sequelize.define('holding', {
     timestamps: false
   })
 
-
-
-
 try {
   sequelize.authenticate();
   console.log('Connection has been established successfully.');
@@ -118,6 +115,17 @@ try {
 
 app.get('/', async(req, res) => {
   res.send('Hello World!')
+})
+
+app.get('/getCard', async(req, res) => {
+  let cardid = req.query.cardid
+  try{
+    const card = await card.findOne({where: {userid : userid}})
+    res.status(200, card.cardid)
+  }
+  catch {
+    res.status(400, "No card found")
+  }
 })
 
 app.post('/createuser', async (req, res) => {
@@ -258,6 +266,6 @@ app.delete('/deletecardfromwallet', async (req,res) => {
   });
 })
 
-app.listen(port, '0.0.0.0', () => {
+app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
