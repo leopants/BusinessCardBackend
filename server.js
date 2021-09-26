@@ -116,17 +116,6 @@ app.get('/', async(req, res) => {
   res.send('Hello World!')
 })
 
-app.get('/getCard', async(req, res) => {
-  let cardid = req.query.cardid
-  try{
-    const card = await card.findOne({where: {userid : userid}})
-    res.status(200, card.cardid)
-  }
-  catch {
-    res.status(400, "No card found")
-  }
-})
-
 app.post('/createuser', async (req, res) => {
   console.log('here')
   firstname = req.body.firstname;
@@ -191,10 +180,23 @@ app.get('/getcards', async (req, res) => {
   let user = await holding.findAll( {where: {userid : userid}})
   if (user) {
     //response = user.firstname, user.lastname, user.username, user.email, user.id]
-    res.status(200, user)
+    res.json(user)
   }
   else {
-    res.status(400, "No userfound")
+    res.status(400, "No user found")
+  }
+})
+
+app.get('/getcardid', async (req, res) => {
+  let cardid = req.query.cardid
+
+  let card = await card.findAll( {where: {cardid: cardid}})
+  if (card) {
+    //response = user.firstname, user.lastname, user.username, user.email, user.id]
+    res.send(card.cardid)
+  }
+  else {
+    res.status(400, "No card found")
   }
 })
 
