@@ -199,8 +199,6 @@ app.get('/getcards', async (req, res) => {
 })
 
 app.get('/getuser', async (req, res) => {
-  
-  res.send("Hello")
   let username = req.query.username;
   let userpassword = req.query.userpassword;
 
