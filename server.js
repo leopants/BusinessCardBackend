@@ -199,6 +199,7 @@ app.get('/getcards', async (req, res) => {
 })
 
 app.get('/getuser', async (req, res) => {
+  
   res.send("Hello")
   let username = req.query.username;
   let userpassword = req.query.userpassword;
@@ -206,7 +207,7 @@ app.get('/getuser', async (req, res) => {
   let user = await users.findOne( {where: {username : username}})
   if (user) {
     //response = user.firstname, user.lastname, user.username, user.email, user.id]
-    res.send(user)
+    res.json(user)
   }
   else {
     res.status(400, "No user")
