@@ -1,6 +1,5 @@
 const express = require('express')
 const app = express()
-const port = 8080
 var bodyParser = require("body-parser")
 var cors = require('cors')
 const  {Sequelize, DataTypes} = require('sequelize')
