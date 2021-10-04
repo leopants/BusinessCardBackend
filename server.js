@@ -144,10 +144,10 @@ app.post("/createuser", async (req, res) => {
             username: username,
         });
         console.log("User added to the table");
-        res.status(200, "User added");
+        res.status(200).send("User added");
     } catch {
         //username or email already exists
-        res.status(500, "no");
+        res.status(500).send("Unable to create user");
     }
 });
 
